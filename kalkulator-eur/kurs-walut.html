@@ -1,0 +1,36 @@
+<div class="container">
+    <h2>Kalkulator walutowy Euro (EUR) → Polskie złote (PLN)</h2>
+    <form>
+      <label for="euroInput">Wprowadź kwotę w Euro:</label>
+      <input id="euroInput" min="0" step="0.01" type="number" value="0" />
+      <!-- Przycisk z unikalnym ID -->
+      <button id="mojPrzycisk">Oblicz</button>
+    </form>
+    <p id="wynik">0 Euro = 0 PLN</p>
+  </div>
+   <!-- ta sekcja do ogólnej JS -->
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Obsługa kliknięcia przycisku
+    document.querySelector("#mojPrzycisk").addEventListener("click", function(event) {
+      event.preventDefault(); // Zatrzymuje domyślne zachowanie przycisku (przeładowanie strony)
+      pobierzKursIprzelicz(); // Wywołuje funkcję kalkulatora
+    });
+    
+    // Funkcja pobierająca kurs i przeliczająca
+    function pobierzKursIprzelicz() {
+      const euroInput = document.getElementById("euroInput").value;
+      const url = 'https://api.nbp.pl/api/exchangerates/rates/a/eur/?format=json';
+  
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const kursEuroPLN = data.rates[0].mid;
+          let wynikPLN = euroInput * kursEuroPLN;
+          document.getElementById("wynik").innerText = `${euroInput} Euro = ${wynikPLN.toFixed(2)} PLN`;
+        })
+        .catch(error => console.error('Błąd pobierania kursu:', error));
+    }
+  });
+  </script>
+  
